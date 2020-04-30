@@ -9,7 +9,6 @@ class Team_m extends CI_Model{
         $this->db->from('teams');
         $this->db->group_by("teams.id");
         $this->db->join('users', 'users.team_id = teams.id', 'RIGHT');
-        $this->db->group_by("teams.id");
 
         $query = $this->db->get();
 
