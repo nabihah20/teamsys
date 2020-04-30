@@ -21,18 +21,38 @@ class Team_m extends CI_Model{
 
     public function addTeam(){
         $field = array(
-            'team_id' =>$this->input->post('txtID'),
             'tname'=>$this->input->post('txtTeamName'),
-            'lead_tname'=>$this->input->post('txtLeadName'),
+            'lead_tname'=>$this->input->post('txtLeadName')
+        );
+        $this->db->insert('teams', $field);
+        $field = array(
             'members'=>$this->input->post('txtMemberName')
         );
-        $this->db->insert('team_users', $field);
+        $this->db->insert('users', $field);
+            
+
         if($this->db->affected_rows() > 0){
             return true;
 
         }else{
             return false;
         }
+    }
+
+    public function viewTeam(){
+		$id = $this->input->get('id');
+
+        $this->db->select('teams.id, teams.tname, teams.lead_tname')
+                ->select('GROUP_CONCAT(users.name SEPARATOR ",") as member', FALSE); 
+        $this->db->from('teams');
+        $this->db->join('users', 'users.team_id = teams.id', 'RIGHT');
+        $this->db->group_by('teams.id');
+        $this->db->where('id', $id);
+		if($query->num_rows() > 0){
+			return $query->row();
+		}else{
+			return false;
+		}
     }
 
     public function editTeam(){

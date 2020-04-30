@@ -68,6 +68,43 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div id="viewModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">View Team</h4>
+      </div>
+      <div class="modal-body">
+        	<form id="viewForm" action="" method="post" class="form-horizontal">
+        		<div class="form-group">
+        			<label for="name" class="label-control col-md-4">Team Name</label>
+        			<div class="col-md-8">
+        				<input type="text" name="txtTeamName" class="form-control">
+        			</div>
+        		</div>
+                <div class="form-group">
+        			<label for="name" class="label-control col-md-4">Lead Name</label>
+        			<div class="col-md-8">
+        				<input type="text" name="txtLeadName" class="form-control">
+        			</div>
+        		</div>
+                <div class="form-group">
+        			<label for="name" class="label-control col-md-4">Member Name</label>
+        			<div class="col-md-8">
+        				<input type="text" name="txtMemberName" class="form-control"><br>
+        			</div>
+        		</div>
+        	</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="btnEditTeam" class="btn btn-primary">Edit Team</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -90,17 +127,19 @@
     $(function(){
         showAllTeam();
 
-        //Add New
+        //Add New Button
         $('#btnAdd').click(function(){
             $('#myModal').modal('show');
             $('#myModal').find('.modal-title').text('Add New Team');
             $('#myForm').attr('action','<?php echo base_url() ?>team/addTeam');
         });
 
+        //Button Add Member
         $('#btnAddMember').click(function(){
             alert('text');
         });
 
+        //Button Add Whole Team
         $('#btnAddTeam').click(function(){
             var url= $('#myForm').attr('action');
             var data = $('#myForm').serialize();
@@ -197,12 +236,14 @@
             });
 
             //view
-            $('#showdata').on('click','.item-view',function(){
-                var id = $(this).attr('data');
-                $('#myModal').modal('show');
-                $('#myModal').find('.modal-title').text('View Team');
-                $('#myForm').attr('action','<?php echo base_url() ?>team/ViewTeam');
+            $('#showdata').on('click', '.item-view', function(){
+			var id = $(this).attr('data');
+            //alert(id);
+            $('#viewModal').modal('show');
+            $('#viewModal').find('.modal-title').text('View Team');
+            $('#viewForm').attr('action', '<?php echo base_url() ?>team/viewTeam');
             });
+
             //edit
             $('#showdata').on('click', '.item-edit', function(){
                 var id = $(this).attr('data');
@@ -219,7 +260,7 @@
                     success: function(data){
                         $('input[name=txtTeamName]').val(data.tname);
                         $('input[name=txtLeadName]').val(data.lead_tname);
-                        $('input[name=txtMemberName]').val(data.name);
+                        $('input[name=txtMemberName]').val(data.member);
                     },
                     error: function(){
                         alert('Could not Edit Data');
@@ -227,7 +268,7 @@
                 });
 		    });
 
-            //delete- 
+            //delete
             $('#showdata').on('click', '.item-delete', function(){
                 var id = $(this).attr('data');
                 $('#deleteModal').modal('show');
