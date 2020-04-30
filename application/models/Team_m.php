@@ -7,7 +7,7 @@ class Team_m extends CI_Model{
         $this->db->select('teams.id, teams.tname, teams.lead_tname')
                 ->select('GROUP_CONCAT(users.name SEPARATOR ",") as member', FALSE); 
         $this->db->from('teams');
-        $this->db->group_by("teams.id");
+        $this->db->group_by('teams.id');
         $this->db->join('users', 'users.team_id = teams.id', 'RIGHT');
 
         $query = $this->db->get();
