@@ -172,12 +172,14 @@
                     var i;
                     $counter = 1; 
                     $count=1;
+
                     for(i=0; i<data.length; i++){
+
                         html +='<tr>'+  
                                 '<td>'+$counter+'</td>'+
                                 '<td>'+data[i].tname+'</td>'+
                                 '<td>'+data[i].lead_tname+'</td>'+                                    
-                                '<td>'+data[i].name+'<br>'+'</td>'+    
+                                '<td>'+data[i].member+'<br>'+'</td>'+    
                                 '<td>'+
                                     '<a href="javascript:;" class="btn btn-success item-view" data="'+data[i].id+'">View</a>'+
                                     '<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id+'">Edit</a>'+
