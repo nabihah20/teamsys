@@ -19,25 +19,43 @@ class Team_m extends CI_Model{
         }
     }
 
+    public function insertMember(){
+        $field = array(
+            'name'=>$this->input->post('txtMemberName'),
+            'team_id'=>$this->input->post('txtTeamID')
+			);
+		$this->db->insert('users', $field);
+		if($this->db->affected_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
+    }
+    
     public function addTeam(){
-        $field = array(
-            'tname'=>$this->input->post('txtTeamName'),
-            'lead_tname'=>$this->input->post('txtLeadName')
-        );
-        $this->db->insert('teams', $field);
-        $field = array(
-            'members'=>$this->input->post('txtMemberName')
-        );
-        $this->db->insert('users', $field);
-            
+        //$field = array(
+			//'tname'=>$this->input->post('txtTeamName'),
+			//'lead_tname'=>$this->input->post('txtLeadName')
+			//);
+        //$this->db->insert('teams', $field);
+        
+        $member = $this->input->post('txtMemberName');
+        
+        for($i=0; $i < count($member); $i++){
+            $team_id = $this->input->post('txtTeamID');  //ada masalah masukkan team_id  
+            $member_data[] = array(
+                'team_id' =>$team_id[$i],
+                'name' => $member[$i]
+            );
+        }
+        $this->db->insert_batch('users', $member_data);
 
         if($this->db->affected_rows() > 0){
             return true;
-
         }else{
             return false;
-        }
-    }
+        } 
+	}
 
     public function viewTeam(){
 		$id = $this->input->get('id');

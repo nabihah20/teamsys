@@ -1,6 +1,6 @@
 <div class="container"> 
-    <div class="alert alert-success" style="display: none;"> 
-
+    <div class="alert alert-success" style="display: none;">
+		
     </div>
     <div class="form-group col-md-12" style="text-align:right;">
         <button id="btnAdd" class="btn btn-primary">+ New Team</button>
@@ -21,6 +21,7 @@
     </table>
 </div>
 
+<!-- Start Add modal -->
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -29,45 +30,50 @@
         <h4 class="modal-title">Add New Team</h4>
       </div>
       <div class="modal-body">
-        	<form id="myForm" action="" method="post" class="form-horizontal">
-                <?php
-                    require_once('connection_pdo.php');
-                    $result = $conn->prepare("SELECT max(id) FROM teams");
-                    $result->execute();
-                    $team_id = $result->fetchColumn();
-                ?>
-                <input type="text" id="txtID" class="form-control" name="txtID" value=<?php echo $team_id ?> readonly><br/>
-        		<div class="form-group">
-        			<label for="name" class="label-control col-md-4">Team Name</label>
-        			<div class="col-md-8">
-        				<input type="text" name="txtTeamName" class="form-control">
-        			</div>
-        		</div>
-                <div class="form-group">
-        			<label for="name" class="label-control col-md-4">Lead Name</label>
-        			<div class="col-md-8">
-        				<input type="text" name="txtLeadName" class="form-control">
-        			</div>
-        		</div>
-                <div class="form-group">
-        			<label for="name" class="label-control col-md-4">Member Name</label>
-        			<div class="col-md-8">
-        				<input type="text" name="txtMemberName" class="form-control"><br>
-                        <div class="form-group col-md-12" style="text-align:right;">
-                            <button id="btnAddMember" class="btn btn-primary">+ More Member</button>
-                        </div>
-        			</div>
-        		</div>
-        	</form>
+        <form id="myForm" action="" method="post" class="form-horizontal">
+            <?php
+                require_once('connection_pdo.php');
+                $result = $conn->prepare("SELECT max(id) FROM teams");
+                $result->execute();
+                $team_id = $result->fetchColumn();
+            ?>
+            <input type="text" id="txtTeamID" class="form-control" name="txtID" value=<?php echo $team_id ?> readonly><br/>
+            <div class="form-group">
+                <label for="name" class="label-control col-md-4">Team Name</label>
+                <div class="col-md-8">
+                    <input type="text" name="txtTeamName" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name" class="label-control col-md-4">Lead Name</label>
+                <div class="col-md-8">
+                    <input type="text" name="txtLeadName" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name" class="label-control col-md-4">Member Name</label>
+                <div class="col-md-6">
+                    <div class="field_wrapper">
+                        <input type="text" name="txtMemberName[]" class="form-control">    
+                    </div>
+                </div>
+                <div class="col-md-12" style="text-align:right;">
+                    <br>         
+                    <a href="javascript:void(0);" class="btn btn-primary add_button" title="Add field">+ More Member</a>
+                </div>
+            </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" id="btnAddTeam" class="btn btn-primary">Add Team</button>
+        <button type="button" id="btnSave" class="btn btn-primary">Add Team</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<!-- End Add modal -->
 
+<!-- Start View modal -->
 <div id="viewModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -104,7 +110,9 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<!-- End View modal -->
 
+<!-- Start Delete modal -->
 <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -122,6 +130,7 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<!-- End Delete modal -->
 
 <script>
     $(function(){
@@ -134,70 +143,79 @@
             $('#myForm').attr('action','<?php echo base_url() ?>team/addTeam');
         });
 
-        //Button Add Member
-        $('#btnAddMember').click(function(){
-            alert('text');
-        });
-
         //Button Add Whole Team
-        $('#btnAddTeam').click(function(){
-            var url= $('#myForm').attr('action');
-            var data = $('#myForm').serialize();
-            //validate form
-            var teamName = $('input[name=txtTeamName]');
-            var leadName = $('input[name=txtLeadName]');
-            var memberName = $('input[name=txtMemberName]');
-            var result = '';
-            if(teamName.val()==''){
-                teamName.parent().parent().addClass('has-error');
-            }else{
-                teamName.parent().parent().removeClass('has-error');
-                result +='1';
-            }
-            if(leadName.val()==''){
-                leadName.parent().parent().addClass('has-error');
-            }else{
-                leadName.parent().parent().removeClass('has-error');
-                result +='2';
-            }
-            if(memberName.val()==''){
-                memberName.parent().parent().addClass('has-error');
-            }else{
-                memberName.parent().parent().removeClass('has-error');
-                result +='3';
+        $('#btnSave').click(function(){
+			var url = $('#myForm').attr('action');
+			var data = $('#myForm').serialize();
+			//validate form
+            //var tname = $('input[name=txtTeamName]');
+            //var lead_tname = $('input[name=txtLeadName]');
+            //var member = $('input[name=txtMemberName[]]');
+            var member = $('input[name="txtMemberName[]"]').map(function(){ 
+                    return this.value; 
+                }).get();
+			//var result = '';
+			//if(tname.val()==''){
+				//tname.parent().parent().addClass('has-error');
+			//}else{
+				//tname.parent().parent().removeClass('has-error');
+				//result +='1';
+			//}
+			//if(lead_tname.val()==''){
+				//lead_tname.parent().parent().addClass('has-error');
+			//}else{
+				//lead_tname.parent().parent().removeClass('has-error');
+				//result +='2';
+			//}
+
+            if(member == '')
+            {
+            alert('Enter Member');
+            return false;
             }
 
-            if(result=='123'){
-                $.ajax({
-                    type: 'ajax',
-                    method: 'post',
-                    url: url,
+			//if(result=='12'){
+				$.ajax({
+					type: 'ajax',
+					method: 'post',
+					url: url,
                     data: data,
-                    async: false,
-                    dataType: 'json',
-                    success: function(response){
-                        if(response.success){
-                            $('#myModal').modal('hide');
-                            $('#myForm')[0].reset();
-                            if(response.type=='add'){
-                                var type = 'Added'
-                            }else if(response.type=='update'){
-                                var type = 'Updated'
-                            }
-                            $('.alert-success').html('Team'+type+'added successfully').fadeIn().delay(4000).fadeOut;
-                            showAllTeam();
-                        }else{
-                           alert('Error'); 
-                        }
-                        
-                    },
-                    error: function(){
-                        alert('Could not add data to database'); 
-                    }
-
-                });
-            }
-        });
+					async: false,
+					dataType: 'json',
+					success: function(response){
+						if(response.success){
+							$('#myModal').modal('hide');
+							$('#myForm')[0].reset();
+							if(response.type=='add'){
+								var type = 'added'
+							}else if(response.type=='update'){
+								var type ="updated"
+							}
+							$('.alert-success').html('Team '+type+' successfully').fadeIn().delay(4000).fadeOut('slow');
+							showAllTeam();
+						}else{
+							alert('Error');
+						}
+					},
+					error: function(){
+						alert(member);
+					}
+				});
+			//}
+		});
+//Button Add Member
+$(document).on('click', '#btnSaveUser', function(){
+    var name = $('#txtMemberName').text();
+    var team_id = $('#txtTeamID').text();
+    $.ajax({
+      url:"<?php echo base_url(); ?>team/insertMember",
+      method:"POST",
+      data:{name:name, team_id:team_id},
+      success:function(data){
+        load_data();
+      }
+    })
+  });
 
         //function 
        function showAllTeam(){
@@ -238,10 +256,11 @@
             //view
             $('#showdata').on('click', '.item-view', function(){
 			var id = $(this).attr('data');
-            //alert(id);
-            $('#viewModal').modal('show');
-            $('#viewModal').find('.modal-title').text('View Team');
-            $('#viewForm').attr('action', '<?php echo base_url() ?>team/viewTeam');
+            alert(id);
+
+            //$('#viewModal').modal('show');
+            //$('#viewModal').find('.modal-title').text('View Team');
+            //$('#viewForm').attr('action', '<?php echo base_url() ?>team/viewTeam');
             });
 
             //edit
@@ -260,7 +279,6 @@
                     success: function(data){
                         $('input[name=txtTeamName]').val(data.tname);
                         $('input[name=txtLeadName]').val(data.lead_tname);
-                        $('input[name=txtMemberName]').val(data.member);
                     },
                     error: function(){
                         alert('Could not Edit Data');
