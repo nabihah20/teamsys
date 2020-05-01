@@ -37,7 +37,7 @@
                 $result->execute();
                 $team_id = $result->fetchColumn();
             ?>
-            <input type="text" id="txtTeamID" class="form-control" name="txtID" value=<?php echo $team_id ?> readonly><br/>
+            <input type="text" id="txtTeamID" class="form-control" name="txtTeamID" value=<?php echo $team_id ?> readonly><br/>
             <div class="form-group">
                 <label for="name" class="label-control col-md-4">Team Name</label>
                 <div class="col-md-8">

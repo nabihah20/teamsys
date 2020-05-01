@@ -40,11 +40,10 @@ class Team_m extends CI_Model{
         //$this->db->insert('teams', $field);
         
         $member = $this->input->post('txtMemberName');
-        
+        $team_id = $this->input->post('txtTeamID');
         for($i=0; $i < count($member); $i++){
-            $team_id = $this->input->post('txtTeamID');  //ada masalah masukkan team_id  
             $member_data[] = array(
-                'team_id' =>$team_id[$i],
+                'team_id' =>$team_id,
                 'name' => $member[$i]
             );
         }
