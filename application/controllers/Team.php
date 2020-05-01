@@ -29,6 +29,11 @@ Class Team extends CI_Controller {
 		echo json_encode($msg);
 	}
 
+	public function insertMember(){
+		$result = $this->m->insertMember();
+		echo json_encode($result);
+	}
+
 	public function viewTeam(){
 		$result = $this->m->viewTeam();
 		echo json_encode($result);
