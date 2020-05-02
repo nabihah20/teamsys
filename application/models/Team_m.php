@@ -33,29 +33,31 @@ class Team_m extends CI_Model{
     }
     
     public function addTeam(){
-        //$field = array(
-			//'tname'=>$this->input->post('txtTeamName'),
-			//'lead_tname'=>$this->input->post('txtLeadName')
-			//);
-        //$this->db->insert('teams', $field);
-        
-        $member = $this->input->post('txtMemberName');
-        $team_id = $this->input->post('txtTeamID');
-        for($i=0; $i < count($member); $i++){
-            $member_data[] = array(
-                'team_id' =>$team_id,
-                'name' => $member[$i]
+
+        $team_data = array(
+            'id' => $this->db->insert_id(),
+            'tname' => $this->input->post('txtTeamName'),
+            'lead_tname' => $this->input->post('txtLeadName')
             );
+            $FirstTable = $this->db->insert('teams', $team_data);
+            
+            $member = $this->input->post('txtMemberName');
+            $team_id = $this->db->insert_id();
+
+            for($i=0; $i < count($member); $i++){
+                $member_data[] = array(
+                    'team_id' =>$team_id,
+                    'name' => $member[$i]
+                );
+            }
+            $this->db->insert_batch('users', $member_data);
+            if($this->db->affected_rows() > 0){
+                return true;
+            }else{
+                return false;
+            }
         }
-        $this->db->insert_batch('users', $member_data);
-
-        if($this->db->affected_rows() > 0){
-            return true;
-        }else{
-            return false;
-        } 
-	}
-
+ 
     public function viewTeam(){
 		$id = $this->input->get('id');
 
@@ -73,9 +75,13 @@ class Team_m extends CI_Model{
     }
 
     public function editTeam(){
-		$id = $this->input->get('id');
-		$this->db->where('id', $id);
-		$query = $this->db->get('teams');
+		$id = $this->input->get('id'); 
+        $this->db->select('teams.id, teams.tname, teams.lead_tname');
+        $this->db->from('teams');
+        $this->db->join('users', 'users.team_id = teams.id', 'RIGHT');
+        $this->db->where('teams.id', $id);
+        $query = $this->db->get();
+        
 		if($query->num_rows() > 0){
 			return $query->row();
 		}else{
@@ -84,9 +90,9 @@ class Team_m extends CI_Model{
     }
     
     public function updateTeam(){
-		$id = $this->input->post('txtId');
+		$id = $this->input->post('txtTeamID');
 		$field = array(
-            'id' =>$this->input->post('txtID'),
+            'id' =>$this->input->post('txtTeamID'),
             'tname'=>$this->input->post('txtTeamName'),
             'lead_tname'=>$this->input->post('txtLeadName'),
             'members'=>$this->input->post('txtMemberName')

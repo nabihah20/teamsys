@@ -31,27 +31,20 @@
       </div>
       <div class="modal-body">
         <form id="myForm" action="" method="post" class="form-horizontal">
-            <?php
-                require_once('connection_pdo.php');
-                $result = $conn->prepare("SELECT max(id) FROM teams");
-                $result->execute();
-                $team_id = $result->fetchColumn();
-            ?>
-            <input type="text" id="txtTeamID" class="form-control" name="txtTeamID" value=<?php echo $team_id ?> readonly><br/>
             <div class="form-group">
-                <label for="name" class="label-control col-md-4">Team Name</label>
+                <label for="team_name" class="label-control col-md-4">Team Name</label>
                 <div class="col-md-8">
                     <input type="text" name="txtTeamName" class="form-control">
                 </div>
             </div>
             <div class="form-group">
-                <label for="name" class="label-control col-md-4">Lead Name</label>
+                <label for="lead_name" class="label-control col-md-4">Lead Name</label>
                 <div class="col-md-8">
                     <input type="text" name="txtLeadName" class="form-control">
                 </div>
             </div>
             <div class="form-group">
-                <label for="name" class="label-control col-md-4">Member Name</label>
+                <label for="member_name" class="label-control col-md-4">Member Name</label>
                 <div class="col-md-6">
                     <div class="field_wrapper">
                         <input type="text" name="txtMemberName[]" class="form-control">    
@@ -82,11 +75,19 @@
         <h4 class="modal-title">View Team</h4>
       </div>
       <div class="modal-body">
-        	<form id="viewForm" action="" method="post" class="form-horizontal">
+      <?php
+                $id =
+                require_once('connection_pdo.php');
+                $result = $conn->prepare("SELECT max(id)+1 FROM teams");
+                $result->execute();
+                $team_id = $result->fetchColumn();
+
+            ?>
+        	<form id="viewForm" action="" method="get" class="form-horizontal">
         		<div class="form-group">
         			<label for="name" class="label-control col-md-4">Team Name</label>
         			<div class="col-md-8">
-        				<input type="text" name="txtTeamName" class="form-control">
+        				<input type="text" name="txtTeamName" value="<?php echo $team_id ?>" class="form-control">
         			</div>
         		</div>
                 <div class="form-group">
@@ -148,33 +149,31 @@
 			var url = $('#myForm').attr('action');
 			var data = $('#myForm').serialize();
 			//validate form
-            //var tname = $('input[name=txtTeamName]');
-            //var lead_tname = $('input[name=txtLeadName]');
-            //var member = $('input[name=txtMemberName[]]');
+            var tname = $('input[name="txtTeamName"]');
+            var lead_tname = $('input[name="txtLeadName"]');
             var member = $('input[name="txtMemberName[]"]').map(function(){ 
                     return this.value; 
                 }).get();
-			//var result = '';
-			//if(tname.val()==''){
-				//tname.parent().parent().addClass('has-error');
-			//}else{
-				//tname.parent().parent().removeClass('has-error');
-				//result +='1';
-			//}
-			//if(lead_tname.val()==''){
-				//lead_tname.parent().parent().addClass('has-error');
-			//}else{
-				//lead_tname.parent().parent().removeClass('has-error');
-				//result +='2';
-			//}
+			var result = '';
+			if(tname.val()==''){
+				tname.parent().parent().addClass('has-error');
+			}else{
+				tname.parent().parent().removeClass('has-error');
+				result +='1';
+			}
+			if(lead_tname.val()==''){
+				lead_tname.parent().parent().addClass('has-error');
+			}else{
+				lead_tname.parent().parent().removeClass('has-error');
+				result +='2';
+			}
 
-            if(member == '')
-            {
-            alert('Enter Member');
-            return false;
+            if(member == ''){
+                alert('Enter Member');
+                return false;
             }
 
-			//if(result=='12'){
+			if(result=='12'){
 				$.ajax({
 					type: 'ajax',
 					method: 'post',
@@ -198,24 +197,11 @@
 						}
 					},
 					error: function(){
-						alert(member);
+						alert("Try again");
 					}
 				});
-			//}
+			}
 		});
-//Button Add Member
-$(document).on('click', '#btnSaveUser', function(){
-    var name = $('#txtMemberName').text();
-    var team_id = $('#txtTeamID').text();
-    $.ajax({
-      url:"<?php echo base_url(); ?>team/insertMember",
-      method:"POST",
-      data:{name:name, team_id:team_id},
-      success:function(data){
-        load_data();
-      }
-    })
-  });
 
         //function 
        function showAllTeam(){
@@ -239,8 +225,8 @@ $(document).on('click', '#btnSaveUser', function(){
                                 '<td>'+data[i].member+'<br>'+'</td>'+    
                                 '<td>'+
                                     '<a href="javascript:;" class="btn btn-success item-view" data="'+data[i].id+'">View</a>'+
-                                    '<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id+'">Edit</a>'+
-                                    '<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].id+'">Delete</a>'+
+                                    //'<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id+'">Edit</a>'+
+                                    //'<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].id+'">Delete</a>'+
                                 '</td>'+
                             '</tr>';
                             $counter++;
@@ -256,11 +242,11 @@ $(document).on('click', '#btnSaveUser', function(){
             //view
             $('#showdata').on('click', '.item-view', function(){
 			var id = $(this).attr('data');
-            alert(id);
+            //alert(id);
 
-            //$('#viewModal').modal('show');
-            //$('#viewModal').find('.modal-title').text('View Team');
-            //$('#viewForm').attr('action', '<?php echo base_url() ?>team/viewTeam');
+            $('#viewModal').modal('show');
+            $('#viewModal').find('.modal-title').text('View Team');
+            $('#viewForm').attr('action', '<?php echo base_url() ?>team/viewTeam');
             });
 
             //edit
@@ -272,13 +258,14 @@ $(document).on('click', '#btnSaveUser', function(){
                 $.ajax({
                     type: 'ajax',
                     method: 'get',
-                    url: '<?php echo base_url() ?>employee/editTeam',
+                    url: '<?php echo base_url() ?>team/editTeam',
                     data: {id: id},
                     async: false,
                     dataType: 'json',
                     success: function(data){
                         $('input[name=txtTeamName]').val(data.tname);
                         $('input[name=txtLeadName]').val(data.lead_tname);
+                        $('input[name="txtMemberName]').val(data.name);
                     },
                     error: function(){
                         alert('Could not Edit Data');
