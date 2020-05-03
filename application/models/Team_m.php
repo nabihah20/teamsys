@@ -5,7 +5,7 @@ class Team_m extends CI_Model{
     public function showAllTeam(){
 
         $this->db->select('teams.id, teams.tname, teams.lead_tname')
-                ->select('GROUP_CONCAT(users.name SEPARATOR ",") as member', FALSE); 
+                ->select('GROUP_CONCAT(users.uname SEPARATOR ",") as member', FALSE); 
         $this->db->from('teams');
         $this->db->join('users', 'users.team_id = teams.id', 'RIGHT');
         $this->db->group_by('teams.id');
@@ -21,7 +21,7 @@ class Team_m extends CI_Model{
 
     public function insertMember(){
         $field = array(
-            'name'=>$this->input->post('txtMemberName'),
+            'uname'=>$this->input->post('txtMemberName'),
             'team_id'=>$this->input->post('txtTeamID')
 			);
 		$this->db->insert('users', $field);
@@ -47,7 +47,7 @@ class Team_m extends CI_Model{
             for($i=0; $i < count($member); $i++){
                 $member_data[] = array(
                     'team_id' =>$team_id,
-                    'name' => $member[$i]
+                    'uname' => $member[$i]
                 );
             }
             $this->db->insert_batch('users', $member_data);
@@ -62,7 +62,7 @@ class Team_m extends CI_Model{
 		$id = $this->input->get('id');
 
         $this->db->select('teams.id, teams.tname, teams.lead_tname')
-                ->select('GROUP_CONCAT(users.name SEPARATOR ",") as member', FALSE); 
+                ->select('GROUP_CONCAT(users.uname SEPARATOR ",") as member', FALSE); 
         $this->db->from('teams');
         $this->db->join('users', 'users.team_id = teams.id', 'RIGHT');
         $this->db->group_by('teams.id');
