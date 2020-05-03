@@ -137,8 +137,6 @@
 			}
 		});
 
-        
-            
         //Button view team
         $(document).on('click', '.item-view', function(){
         var id = $(this).attr('data');
@@ -151,7 +149,7 @@
                 }]);
             }
         };
-        new Dialogify('fetch_single.php', options)
+        new Dialogify('fetch_teamDetails.php', options)
             .title('Team Details')
             .showModal();
         });

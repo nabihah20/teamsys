@@ -25,26 +25,35 @@ if (isset($_GET['id'])) {
 }
 ?>
     <div class="row">
-        <div class="form-group col-md-4">
-        <label>Team Name:</label>
+        <div class="form-group col-md-5">
+            <label>Team Name</label>
         </div>
-        <div class="form-group col-md-8">
-        <?php echo $teamRow['tname'];?>
+        <div class="form-group col-md-1">
+            <label>:</label>
+        </div>
+        <div class="form-group col-md-5">
+            <?php echo $teamRow['tname'];?>
         </div>                    
     </div>
     <div class="row">
-        <div class="form-group col-md-4">
-        <label>Team Lead:</label>
+        <div class="form-group col-md-5">
+            <label>Team Lead</label>
         </div>
-        <div class="form-group col-md-8">
-        <?php echo $teamRow['lead_tname'];?>
+        <div class="form-group col-md-1">
+            <label>:</label>
+        </div>
+        <div class="form-group col-md-5">
+            <?php echo $teamRow['lead_tname'];?>
         </div>                    
     </div>
     <div class="row">
-        <div class="form-group col-md-4">
-            <label>Team Members:</label>
+        <div class="form-group col-md-5">
+            <label>Team Members</label>
         </div>
-        <div class="form-group col-md-8">
+        <div class="form-group col-md-1">
+            <label>:</label>
+        </div>
+        <div class="form-group col-md-5">
             <table>
                 <?php
                 if ($memberRow && $statement->rowCount() > 0) { 
