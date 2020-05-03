@@ -76,7 +76,6 @@
       </div>
       <div class="modal-body">
       <?php
-                $id =
                 require_once('connection_pdo.php');
                 $result = $conn->prepare("SELECT max(id)+1 FROM teams");
                 $result->execute();
@@ -87,7 +86,7 @@
         		<div class="form-group">
         			<label for="name" class="label-control col-md-4">Team Name</label>
         			<div class="col-md-8">
-        				<input type="text" name="txtTeamName" value="<?php echo $team_id ?>" class="form-control">
+                        <input type="text" name="txtTeamName" class="form-control">
         			</div>
         		</div>
                 <div class="form-group">
@@ -133,7 +132,7 @@
 </div><!-- /.modal -->
 <!-- End Delete modal -->
 
-<script>
+<script type="text/javascript" language="javascript" >
     $(function(){
         showAllTeam();
 
@@ -224,7 +223,7 @@
                                 '<td>'+data[i].lead_tname+'</td>'+                                    
                                 '<td>'+data[i].member+'<br>'+'</td>'+    
                                 '<td>'+
-                                    '<a href="javascript:;" class="btn btn-success item-view" data="'+data[i].id+'">View</a>'+
+                                    '<a href="javascript:;" class="btn btn-success item-view" name="item-view" data="'+data[i].id+'">View</a>'+
                                     //'<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id+'">Edit</a>'+
                                     //'<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].id+'">Delete</a>'+
                                 '</td>'+
@@ -239,14 +238,22 @@
                 }
             });
 
+            
             //view
-            $('#showdata').on('click', '.item-view', function(){
+            $(document).on('click', '.item-view', function(){
 			var id = $(this).attr('data');
-            //alert(id);
-
-            $('#viewModal').modal('show');
-            $('#viewModal').find('.modal-title').text('View Team');
-            $('#viewForm').attr('action', '<?php echo base_url() ?>team/viewTeam');
+            var options = {
+                ajaxPrefix: '',
+                ajaxData: {id:id},
+                ajaxComplete:function(){
+                    this.buttons([{
+                    type: Dialogify.BUTTON_PRIMARY
+                    }]);
+                }
+            };
+            new Dialogify('fetch_single.php', options)
+                .title('Team Details')
+                .showModal();
             });
 
             //edit
@@ -265,7 +272,7 @@
                     success: function(data){
                         $('input[name=txtTeamName]').val(data.tname);
                         $('input[name=txtLeadName]').val(data.lead_tname);
-                        $('input[name="txtMemberName]').val(data.name);
+                        $('input[name="txtMemberName]').val(data.uname);
                     },
                     error: function(){
                         alert('Could not Edit Data');
