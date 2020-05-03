@@ -28,37 +28,4 @@ Class Team extends CI_Controller {
 		echo json_encode($msg);
 	}
 
-	public function insertMember(){
-		$result = $this->m->insertMember();
-		echo json_encode($result);
-	}
-
-	public function viewTeam(){
-		$result = $this->m->viewTeam();
-		echo json_encode($result);
-	}
-
-	public function editTeam(){
-		$result = $this->m->editTeam();
-		echo json_encode($result);
-	}
-
-	public function updateTeam(){
-		$result = $this->m->updateTeam();
-		$msg['success'] = false;
-		$msg['type'] = 'update';
-		if($result){
-			$msg['success'] = true;
-		}
-		echo json_encode($msg);
-	}
-
-	public function deleteTeam(){
-		$result = $this->m->deleteTeam();
-		$msg['success'] = false;
-		if($result){
-			$msg['success'] = true;
-		}
-		echo json_encode($msg);
-	}
 }
