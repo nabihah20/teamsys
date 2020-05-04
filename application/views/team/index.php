@@ -45,10 +45,8 @@
             </div>
             <div class="form-group">
                 <label for="member_name" class="label-control col-md-4">Member Name</label>
-                <div class="col-md-6">
-                    <div class="field_wrapper">
-                        <input type="text" name="txtMemberName[]" class="form-control">    
-                    </div>
+                <div class="field_wrapper col-md-8">
+                    <input type="text" name="txtMemberName[]" class="form-control col-md-6">    
                 </div>
                 <div class="col-md-12" style="text-align:right;">
                     <br>         
